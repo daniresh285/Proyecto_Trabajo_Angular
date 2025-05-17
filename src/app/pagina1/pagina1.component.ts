@@ -63,8 +63,6 @@ export class Pagina1Component implements OnInit {
     });
   }
 
-
-
   // Con el subscribe lo que hacemos una subscripcion a la respuesta asincrona
   // Si da exito se guarda en data todo el contenido de la api
   cargarPokemons() {
