@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { DataService } from '../services/data.service';
-import { CommonModule } from '@angular/common'; // Esto es necesario para activar el if y el for 
+import { CommonModule } from '@angular/common'; // Esto es necesario para activar el if y el for
 
 
 
@@ -17,26 +17,18 @@ import { CommonModule } from '@angular/common'; // Esto es necesario para activa
     <button (click)="abrirEnNuevaPestana()">Ir a Página 2</button>
     <br><br>
     <button (click)="cargarPokemons()">Cargar Pokemons</button>
-
-    
-    <div *ngIf="pokemon?.length"> <!-- Muestra el contenido de la array si tiene elemntos o si el lenght es mayor de 0 -->
-      <h3>Pokemons cargados:</h3> <!-- Este titulo aparece solo si el div es visible, osea si hay datos -->
-      <ul>
-        <li *ngFor="let p of pokemon">{{ p.name }}</li> <!-- Va iterar sobre cada elemento de la array, cada pokemon es llamado aqui por p y despues hacemos una interpolacion para coja los nombres de los pokemons y eso lo agrupa en una lista -->
-      </ul>
-    </div>
   `,
   imports: [RouterModule, CommonModule] //El common module hay que ponerlo tanto aqui como arriba para que funcione
 })
 export class Pagina1Component implements OnInit {
 
-  // La variable donde vamos a guardar los datos que va a ser un array que puede entrar cualquier tipo de dato y se incializará en una array vacía 
+  // La variable donde vamos a guardar los datos que va a ser un array que puede entrar cualquier tipo de dato y se incializará en una array vacía
   pokemon: any[] = [];
 
   // El constructor se utiliza para inyectar dependencias que tenemos creadas arriba, si pones private estas se guardan como propiedades que puedes utilizar mas adentante
   constructor(
-    private router: Router, 
-    private route: ActivatedRoute, 
+    private router: Router,
+    private route: ActivatedRoute,
     private dataService: DataService
   ) {}
 
@@ -51,14 +43,14 @@ export class Pagina1Component implements OnInit {
     // Hacemos llamada a la api que tiene un observable que representa la llamada a la api
     // Con el subscribe lo que hacemos una subscripcion a la respuesta asincrona
     // Si da exito se guarda en data todo el contenido de la api y despues extraemos el contenido de data y lo guardamos en la variable pokemon que tenemos en este componente
-    
+
   }
 
   abrirEnNuevaPestana() {
     localStorage.setItem('vengoDe', 'pagina1'); // Guarda el valor de pagina 1 en localStorage del navegador con la clave "VengoDe"
     this.router.navigate(['/pagina2'], { // Navega a la ruta /pagina2
       queryParams: { // le añado paramatros de consulta que va a salir en la barra de busqueda
-        origen: 'pagina1', 
+        origen: 'pagina1',
         usuario: 'admin' }
     });
   }
@@ -66,8 +58,11 @@ export class Pagina1Component implements OnInit {
   // Con el subscribe lo que hacemos una subscripcion a la respuesta asincrona
   // Si da exito se guarda en data todo el contenido de la api
   cargarPokemons() {
-  this.dataService.getRandomPokemons().subscribe(data => {
-    console.log('Pokémon aleatorios con detalles:', data);
-  });
-}
+    this.dataService.getRandomPokemons().subscribe(data => {
+      this.pokemon = data;
+      // Guardamos los datos en localStorage para usarlos en Página 2
+      localStorage.setItem('pokemons', JSON.stringify(data));
+      console.log('Pokémon aleatorios cargados y guardados en localStorage:', data);
+    });
+  }
 }

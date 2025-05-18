@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
-import { DataService } from '../services/data.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -37,9 +36,8 @@ export class Pagina2Component implements OnInit {
   mostrarDetalles = false;
 
   constructor(
-    private route: ActivatedRoute, 
-    private titleService: Title, 
-    private dataService: DataService
+    private route: ActivatedRoute,
+    private titleService: Title
   ) {}
 
   ngOnInit() {
@@ -51,23 +49,17 @@ export class Pagina2Component implements OnInit {
     // Accedemos a los parámetros de la URL, y recogemos los datos correspondientes
     this.origen = this.route.snapshot.queryParamMap.get('origen') || localStorage.getItem('vengoDe');
     this.usuario = this.route.snapshot.queryParamMap.get('usuario');
-
-    this.dataService.getRandomPokemons().subscribe({
-      next: details => {
-        this.pokemon = details; // Esto lo que hace es basicamente buscarme los resultados que tengo en el template y como lo tengo que me lo ponga en una lista y me busque por el nombre, me tiene que poner en la pagina los nombres en formato lista
-        console.log('Detalles recibidos:', this.pokemon);
-      },
-      error: err => {
-        console.error('Error cargando detalles:', err);
-      }
-    });
   }
 
   cargarPokemons() {
-    this.dataService.getRandomPokemons().subscribe(data => {
-      this.pokemon = data;
+    const dataGuardada = localStorage.getItem('pokemons');
+
+    if (dataGuardada) {
+      this.pokemon = JSON.parse(dataGuardada);
       this.mostrarDetalles = true;
-      console.log("Extraidos correctamente");
-    });
+      console.log("Pokémon cargados desde localStorage:", this.pokemon);
+    } else {
+      console.warn("No hay datos de Pokémon en localStorage.");
+    }
   }
 }
