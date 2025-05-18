@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,            // Este componente es independiente (no necesita estar en un módulo)
   selector: 'pagina2',          // Selector para usar el componente en HTML como <pagina2>
   imports: [CommonModule],      // Importamos CommonModule para las directivas en la plantilla
-  template: `                   // Plantilla HTML inline que define la vista del componente
+  template: `                    <!-- Plantilla HTML inline que define la vista del componente -->
     <h2>Esta es la Página 2</h2>
     <p>Origen: {{ origen || 'Desconocido' }}</p>    <!-- Muestra el origen o "Desconocido" si es null -->
     <p>Usuario: {{ usuario || 'Invitado' }}</p>    <!-- Muestra el usuario o "Invitado" si es null -->
