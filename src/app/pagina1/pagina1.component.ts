@@ -39,17 +39,12 @@ export class Pagina1Component implements OnInit {
 
     this.route.queryParams.subscribe(params => {
       console.log('QueryParams:', params)});
-
-    // Hacemos llamada a la api que tiene un observable que representa la llamada a la api
-    // Con el subscribe lo que hacemos una subscripcion a la respuesta asincrona
-    // Si da exito se guarda en data todo el contenido de la api y despues extraemos el contenido de data y lo guardamos en la variable pokemon que tenemos en este componente
-
   }
 
   abrirEnNuevaPestana() {
     localStorage.setItem('vengoDe', 'pagina1'); // Guarda el valor de pagina 1 en localStorage del navegador con la clave "VengoDe"
-    this.router.navigate(['/pagina2'], { // Navega a la ruta /pagina2
-      queryParams: { // le añado paramatros de consulta que va a salir en la barra de busqueda
+    this.router.navigate(['/pagina2'], { // Navega a la ruta /pagina2 tal como se pide
+      queryParams: { // le añado paramatros de consulta que va a salir en la siguiente página a la hora de navegar a la pagina 2
         origen: 'pagina1',
         usuario: 'admin' }
     });
@@ -61,8 +56,8 @@ export class Pagina1Component implements OnInit {
     this.dataService.getRandomPokemons().subscribe(data => {
       this.pokemon = data;
       // Guardamos los datos en localStorage para usarlos en Página 2
-      localStorage.setItem('pokemons', JSON.stringify(data));
-      console.log('Pokémon aleatorios cargados y guardados en localStorage:', data);
+      localStorage.setItem('pokemons', JSON.stringify(data)); // Lo guardamos como un string 
+      console.log('Pokémon aleatorios cargados y guardados en localStorage:', data); // Avisamos de que los datos se han guardado correctamente
     });
   }
 }
