@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common'; // Importamos CommonModule para usar directivas comunes como *ngIf y *ngFor
+import { DataService } from '../services/data.service';
 
 // Decorador que define el componente Angular
 @Component({
   standalone: true,           
   selector: 'pagina2',          // Selector para usar el componente en HTML como <pagina2>
+  styleUrls: ["./pagina2.component.css"],
   imports: [CommonModule],      // Importamos CommonModule para las directivas en la plantilla
   template: `                    <!-- Plantilla HTML inline que define la vista del componente -->
     <h2>Esta es la Página 2</h2>
@@ -16,22 +18,30 @@ import { CommonModule } from '@angular/common'; // Importamos CommonModule para 
     <button (click)="cargarPokemons()">Mostrar detalles</button> 
 
     <!-- Contenedor que se muestra solo si mostrarDetalles es true y hay pokemons en la lista -->
-    <div *ngIf="mostrarDetalles && pokemon?.length">
-      <h3>Pokémons en esta página:</h3>
-      <ul>
-        <!-- Itera sobre cada Pokémon en la lista pokemon -->
-        <li *ngFor="let p of pokemon">
-          <h4>{{ p.name }}</h4>               <!-- Muestra el nombre del Pokémon -->
-          <p>Habilidades:</p>
-          <ul>
-            <!-- Itera sobre las habilidades del Pokémon -->
-            <li *ngFor="let hab of p.abilities">{{ hab.ability.name }}</li> <!-- Muestra cada habilidad -->
-          </ul>
-        </li>
-      </ul>
-    </div>
+    <ul>
+      <li *ngFor="let p of pokemon">
+        <!-- Botón con el nombre que abre el modal -->
+        <button (click)="abrirModal(p)">{{ p.name }}</button>
 
-  `
+        <p>Habilidades:</p>
+        <ul>
+          <li *ngFor="let hab of p.abilities">{{ hab.ability.name }}</li>
+        </ul>
+      </li>
+    </ul>
+
+    <!-- Modal -->
+    <div class="modal" *ngIf="modalAbierto">
+      <div class="modal-contenido">
+        <button class="cerrar" (click)="cerrarModal()">X</button>
+
+        <h2>{{ pokemonSeleccionado?.name }}</h2>
+
+        <!-- Mostrar toda la información en formato JSON legible -->
+        <pre>{{ pokemonSeleccionado | json }}</pre>
+      </div>
+    </div>
+  `,
 })
 
 export class Pagina2Component implements OnInit {
@@ -39,12 +49,17 @@ export class Pagina2Component implements OnInit {
   usuario: string | null = null;   // Variable para guardar el usuario (puede ser string o null)
 
   pokemon: any[] = [];             // Array que contendrá los datos de Pokémon (tipo any)
-  mostrarDetalles = false;         // Boolean para controlar la visualización de detalles
+  mostrarDetalles = false;         // Booleano para controlar la visualización de detalles de los pokemons
+
+  modalAbierto: boolean = false;      // Controla si el modal está visible
+  pokemonSeleccionado: any = null;    // Guarda el Pokémon que se ha seleccionado
+
 
   // Constructor con inyección de dependencias para rutas y título
   constructor(
     private route: ActivatedRoute,   // Para leer parámetros de la URL
-    private titleService: Title      // Para cambiar el título de la pestaña
+    private titleService: Title,      // Para cambiar el título de la pestaña
+    private dataService: DataService
   ) {}
 
   // Método que se ejecuta al inicializar el componente
@@ -79,4 +94,15 @@ export class Pagina2Component implements OnInit {
       console.warn("No hay datos de Pokémon en localStorage."); // Aviso si no hay datos
     }
   }
+
+  abrirModal(pokemon: any) {
+    this.pokemonSeleccionado = pokemon; //Guarda el objeto completo
+    this.modalAbierto = true; //Abre el modal
+  }
+
+  cerrarModal() {
+    this.pokemonSeleccionado = null;   // Limpia los datos del pokemon
+    this.modalAbierto = false;   // Oculta el modal de la vista
+  }
+
 }

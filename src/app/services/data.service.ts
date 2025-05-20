@@ -49,4 +49,7 @@ export class DataService {
     return shuffled.slice(0, count);
   }
 
+  getPokemonDetalles(name: string) {
+    return this.http.get(`https://pokeapi.co/api/v2/pokemon/${name}`);
+  }
 }
