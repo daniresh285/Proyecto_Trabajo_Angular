@@ -21,7 +21,9 @@ import { DataService } from '../services/data.service';
     <ul>
       <li *ngFor="let p of pokemon">
         <!-- Botón con el nombre que abre el modal -->
-        <button (click)="abrirModal(p)">{{ p.name }}</button>
+        <button class="nombre-pokemon" (click)="abrirModal(p)">
+          {{ p.name }}
+        </button>
 
         <p>Habilidades:</p>
         <ul>
@@ -30,15 +32,55 @@ import { DataService } from '../services/data.service';
       </li>
     </ul>
 
-    <!-- Modal -->
+    <!-- Esto dice que si modalAbierto es = true, el div se deja ver -->
     <div class="modal" *ngIf="modalAbierto">
-      <div class="modal-contenido">
-        <button class="cerrar" (click)="cerrarModal()">X</button>
 
-        <h2>{{ pokemonSeleccionado?.name }}</h2>
+      <!-- El contenido de este se muestra solo si hay algun pokemon seleccionado -->
+      <div class="modal-contenido" *ngIf="pokemonSeleccionado">
+        <button class="cerrar" (click)="cerrarModal()">×</button>
+        
+        <!-- Nombre del pokemon, con el primer carácter en mayúscula gracias al titlecase -->
+        <h2>{{ pokemonSeleccionado.name | titlecase }}</h2>
 
-        <!-- Mostrar toda la información en formato JSON legible -->
-        <pre>{{ pokemonSeleccionado | json }}</pre>
+        <!-- Imagen visual del pokemon -->
+        <img [src]="pokemonSeleccionado.sprites.front_default" alt="Imagen Pokémon"> 
+
+        <!-- Información básica del pokémon -->
+        <p><strong>ID:</strong> {{ pokemonSeleccionado.id }}</p>
+        <p><strong>Altura:</strong> {{ pokemonSeleccionado.height }} cm</p>
+        <p><strong>Peso:</strong> {{ pokemonSeleccionado.weight }} kg</p>
+
+        <!-- De que tipo es el pokemon seleccionado que para el bucle lo que hace es recorrer la lista types -->
+        <p><strong>Tipos:</strong></p>
+        <ul>
+          <li *ngFor="let tipo of pokemonSeleccionado.types">
+            {{ tipo.type.name }}
+          </li>
+        </ul>
+
+        <!-- Habilidades del pokémon, itera sobre la lista abilities -->
+        <p><strong>Habilidades:</strong></p>
+        <ul>
+          <li *ngFor="let habilidad of pokemonSeleccionado.abilities">
+            {{ habilidad.ability.name }}
+          </li>
+        </ul>
+
+        <!-- Estadísticas del pokemon se recorre la lista stats -->
+        <p><strong>Estadísticas:</strong></p>
+        <ul>
+          <li *ngFor="let stat of pokemonSeleccionado.stats">
+            {{ stat.stat.name }}: {{ stat.base_stat }}
+          </li>
+        </ul>
+
+        <!-- Primeros 5 movimientos del pokémon, se recorre mediante un slice la lista de moves -->
+        <p><strong>Movimientos (primeros 5):</strong></p>
+        <ul>
+          <li *ngFor="let move of pokemonSeleccionado.moves.slice(0, 5)">
+            {{ move.move.name }}
+          </li>
+        </ul>
       </div>
     </div>
   `,
@@ -96,13 +138,15 @@ export class Pagina2Component implements OnInit {
   }
 
   abrirModal(pokemon: any) {
-    this.pokemonSeleccionado = pokemon; //Guarda el objeto completo
-    this.modalAbierto = true; //Abre el modal
+    this.pokemonSeleccionado = pokemon; // Guarda el objeto completo
+    this.modalAbierto = true; //  Abre el modal
+    document.body.style.overflow= "hidden"; // Desactiva el scroll de fondo
   }
 
   cerrarModal() {
     this.pokemonSeleccionado = null;   // Limpia los datos del pokemon
     this.modalAbierto = false;   // Oculta el modal de la vista
+    document.body.style.overflow= ''; // Vuelve a activar el modal 
   }
 
 }
