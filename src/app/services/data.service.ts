@@ -19,36 +19,6 @@ export class DataService {
     return this.http.get<any>(this.apiUrl);
   }
 
-
-  getRandomPokemons(count: number = 10): Observable<any[]> {
-    return new Observable(observer => {
-      // Paso 1: obtener lista completa (nombre + URL)
-      this.http.get<any>('https://pokeapi.co/api/v2/pokemon?limit=1302').subscribe(response => {
-        const allPokemons = response.results;
-
-        // Paso 2: seleccionar aleatoriamente 'count' pokémon sin repetir
-        const selectedPokemons = this.selectRandomElements(allPokemons, count);
-
-        // Paso 3: pedir detalles para esos pokémon con forkJoin
-        const requests = selectedPokemons.map(p => this.http.get(p.url));
-        forkJoin(requests).subscribe(details => {
-          observer.next(details);
-          observer.complete();
-        });
-      });
-    });
-  }
-
-  // Función auxiliar para seleccionar elementos aleatorios sin repetir
-  private selectRandomElements(array: any[], count: number): any[] {
-    const shuffled = array.slice();
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled.slice(0, count);
-  }
-
   getPokemonDetalles(name: string) {
     return this.http.get(`https://pokeapi.co/api/v2/pokemon/${name}`);
   }
