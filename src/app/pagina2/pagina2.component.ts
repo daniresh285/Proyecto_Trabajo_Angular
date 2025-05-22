@@ -3,99 +3,36 @@ import { ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common'; // Importamos CommonModule para usar directivas comunes como *ngIf y *ngFor
 import { DataService } from '../services/data.service';
+import { FormsModule } from '@angular/forms';
 
 // Decorador que define el componente Angular
 @Component({
   standalone: true,           
-  selector: 'pagina2',          // Selector para usar el componente en HTML como <pagina2>
+  selector: 'pagina2',  // Selector para usar el componente en HTML como <pagina2>
   styleUrls: ["./pagina2.component.css"],
-  imports: [CommonModule],      // Importamos CommonModule para las directivas en la plantilla
-  template: `                    <!-- Plantilla HTML inline que define la vista del componente -->
-    <h2>Esta es la Página 2</h2>
-    <p>Origen: {{ origen || 'Desconocido' }}</p>    <!-- Muestra el origen o "Desconocido" si es null -->
-    <p>Usuario: {{ usuario || 'Invitado' }}</p>    <!-- Muestra el usuario o "Invitado" si es null -->
-
-    <button (click)="cargarPokemons()">Mostrar detalles</button> 
-
-    <!-- Contenedor que se muestra solo si mostrarDetalles es true y hay pokemons en la lista -->
-    <ul>
-      <li *ngFor="let p of pokemon">
-        <!-- Botón con el nombre que abre el modal -->
-        <button class="nombre-pokemon" (click)="abrirModal(p)">
-          {{ p.name }}
-        </button>
-
-        <p>Habilidades:</p>
-        <ul>
-          <li *ngFor="let hab of p.abilities">{{ hab.ability.name }}</li>
-        </ul>
-      </li>
-    </ul>
-
-    <!-- Esto dice que si modalAbierto es = true, el div se deja ver -->
-    <div class="modal" *ngIf="modalAbierto">
-
-      <!-- El contenido de este se muestra solo si hay algun pokemon seleccionado -->
-      <div class="modal-contenido" *ngIf="pokemonSeleccionado">
-        <button class="cerrar" (click)="cerrarModal()">×</button>
-        
-        <!-- Nombre del pokemon, con el primer carácter en mayúscula gracias al titlecase -->
-        <h2>{{ pokemonSeleccionado.name | titlecase }}</h2>
-
-        <!-- Imagen visual del pokemon -->
-        <img [src]="pokemonSeleccionado.sprites.front_default" alt="Imagen Pokémon"> 
-
-        <!-- Información básica del pokémon -->
-        <p><strong>ID:</strong> {{ pokemonSeleccionado.id }}</p>
-        <p><strong>Altura:</strong> {{ pokemonSeleccionado.height }} cm</p>
-        <p><strong>Peso:</strong> {{ pokemonSeleccionado.weight }} kg</p>
-
-        <!-- De que tipo es el pokemon seleccionado que para el bucle lo que hace es recorrer la lista types -->
-        <p><strong>Tipos:</strong></p>
-        <ul>
-          <li *ngFor="let tipo of pokemonSeleccionado.types">
-            {{ tipo.type.name }}
-          </li>
-        </ul>
-
-        <!-- Habilidades del pokémon, itera sobre la lista abilities -->
-        <p><strong>Habilidades:</strong></p>
-        <ul>
-          <li *ngFor="let habilidad of pokemonSeleccionado.abilities">
-            {{ habilidad.ability.name }}
-          </li>
-        </ul>
-
-        <!-- Estadísticas del pokemon se recorre la lista stats -->
-        <p><strong>Estadísticas:</strong></p>
-        <ul>
-          <li *ngFor="let stat of pokemonSeleccionado.stats">
-            {{ stat.stat.name }}: {{ stat.base_stat }}
-          </li>
-        </ul>
-
-        <!-- Primeros 5 movimientos del pokémon, se recorre mediante un slice la lista de moves -->
-        <p><strong>Movimientos (primeros 5):</strong></p>
-        <ul>
-          <li *ngFor="let move of pokemonSeleccionado.moves.slice(0, 5)">
-            {{ move.move.name }}
-          </li>
-        </ul>
-      </div>
-    </div>
-  `,
+  imports: [CommonModule, FormsModule],  // Importamos CommonModule para las directivas en la plantilla
+  templateUrl: "./pagina2.component.html" // importamos directamente el html donde tenemos todo el contenido
 })
 
 export class Pagina2Component implements OnInit {
   origen: string | null = null;    // Variable para guardar el origen (puede ser string o null)
   usuario: string | null = null;   // Variable para guardar el usuario (puede ser string o null)
 
-  pokemon: any[] = [];             // Array que contendrá los datos de Pokémon (tipo any)
-  mostrarDetalles = false;         // Booleano para controlar la visualización de detalles de los pokemons
+  pokemon: any[] = [];   // Array que contendrá los datos de Pokémon (tipo any)
+  mostrarDetalles = false;   // Booleano para controlar la visualización de detalles de los pokemons
+  todos: any[] =[]; // Array que contendrá todos los pokémons
 
-  modalAbierto: boolean = false;      // Controla si el modal está visible
-  pokemonSeleccionado: any = null;    // Guarda el Pokémon que se ha seleccionado
+  modalAbierto: boolean = false; // Controla si el modal está visible
+  pokemonSeleccionado: any = null; // Guarda el Pokémon que se ha seleccionado
+  paginaInput: number = 1;  // ← Se inicializa con la misma página actual
 
+
+  paginaActual: number = 1;
+  pokemonsPorPagina: number = 10;
+  totalPokemons: number = 0;
+  totalPaginas: number = 0;
+  siguienteURL: string | null = null;
+  anteriorURL: string | null = null;
 
   // Constructor con inyección de dependencias para rutas y título
   constructor(
@@ -111,6 +48,7 @@ export class Pagina2Component implements OnInit {
 
     this.titleService.setTitle('Pagina2');  // Cambiamos el título del navegador a "Pagina2"
 
+
     // Intentamos obtener 'origen' desde los parámetros de la URL,
     // si no está, lo cogemos desde localStorage
     this.origen = this.route.snapshot.queryParamMap.get('origen') || localStorage.getItem('vengoDe');
@@ -124,23 +62,54 @@ export class Pagina2Component implements OnInit {
     });
   }
 
-  // Método para cargar los datos de pokémon desde localStorage al pulsar el botón
-  cargarPokemons() {
-    const dataGuardada = localStorage.getItem('pokemons'); // Leemos la cadena JSON guardada
-
-    if (dataGuardada) {                        // Si hay datos guardados...
-      this.pokemon = JSON.parse(dataGuardada); // Convertimos el JSON a objeto/array
-      this.mostrarDetalles = true;             // Activamos la visualización del bloque de detalles para que podamos ver el nombre y las habilidades
-      console.log("Pokémon cargados desde localStorage:", this.pokemon); // Debugging en consola para saber que se han cargado bien
-    } else {
-      console.warn("No hay datos de Pokémon en localStorage."); // Aviso si no hay datos
+  // Esto lo que hace es ir cargando los pokemons de la siguiente pagina
+  siguientePagina(): void {
+    if (this.paginaActual < this.totalPaginas) {
+      this.paginaActual++;
+      this.paginaInput = this.paginaActual;
+      this.cargarPokemons((this.paginaActual - 1) * this.pokemonsPorPagina);
     }
   }
 
+  anteriorPagina(): void {
+    if (this.paginaActual > 1) {
+      this.paginaActual--;
+      this.paginaInput = this.paginaActual;
+      this.cargarPokemons((this.paginaActual - 1) * this.pokemonsPorPagina);
+    }
+  }
+
+  irAPagina(numero: number): void {
+  if (numero >= 1 && numero <= this.totalPaginas) {
+    this.paginaActual = numero;
+    this.paginaInput = numero;
+    const offset = (numero - 1) * this.pokemonsPorPagina;
+    this.cargarPokemons(offset);
+  }
+}
+  
+  // Método para cargar los datos de pokémon desde localStorage al pulsar el botón
+  cargarPokemons(offset: number = 0) {
+    const pagina = Math.floor(offset / this.pokemonsPorPagina) + 1;
+
+    // Llamada al servicio para obtener los pokémons
+    this.dataService.getPokemons(pagina, this.pokemonsPorPagina).subscribe(data => {
+      this.pokemon = data.results; //Obtenemos los resultados de la llamada y lo guardamos en la variable pokemon
+      this.totalPokemons = data.count; // Guardamos el total de pokemons que nos devuelve la API
+      this.totalPaginas = Math.ceil(this.totalPokemons / this.pokemonsPorPagina); // Calculamos el total de páginas
+      this.siguienteURL = data.next; // Guardamos la URL de la siguiente página
+      this.anteriorURL = data.previous; // Guardamos la URL de la pagina anterior
+      this.mostrarDetalles = true;  // Hacemos un booleano para mostrar los detalles de los pokemons
+    });
+  }
+
+  // Método para cargar todos los pokémons al iniciar la página
   abrirModal(pokemon: any) {
-    this.pokemonSeleccionado = pokemon; // Guarda el objeto completo
-    this.modalAbierto = true; //  Abre el modal
-    document.body.style.overflow= "hidden"; // Desactiva el scroll de fondo
+    this.dataService.getPokemonDetalles(pokemon.name).subscribe(detallesCompletos => {
+      this.pokemonSeleccionado = detallesCompletos;  // Guarda datos completos del Pokémon
+      this.modalAbierto = true;  // Abre el modal
+      document.body.style.overflow = "hidden";  // Desactiva scroll fondo
+    });
   }
 
   cerrarModal() {

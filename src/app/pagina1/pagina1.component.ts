@@ -9,15 +9,7 @@ import { CommonModule } from '@angular/common'; // Esto es necesario para activa
   standalone: true, //Esto es obligatorio dado nuestra version de angular
   selector: 'app-pagina1',
   // Esto es como una plantilla de html para poder poner todo lo que quieras que salga en la página
-  template: `
-    <h1>Esta es la página 1</h1>
-
-    <p>Vamos a crear el boton para pasar a la página 2</p>
-
-    <button (click)="abrirEnNuevaPestana()">Ir a Página 2</button>
-    <br><br>
-    <button (click)="cargarPokemons()">Cargar Pokemons</button>
-  `,
+  templateUrl: "./pagina1.Component.html",
   imports: [RouterModule, CommonModule] //El common module hay que ponerlo tanto aqui como arriba para que funcione
 })
 export class Pagina1Component implements OnInit {

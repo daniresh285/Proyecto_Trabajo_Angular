@@ -52,4 +52,12 @@ export class DataService {
   getPokemonDetalles(name: string) {
     return this.http.get(`https://pokeapi.co/api/v2/pokemon/${name}`);
   }
+
+  getPokemons(pagina: number, limite: number = 10): Observable<any> {
+    const offset = (pagina - 1) * limite;
+    return this.http.get(`https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limite}`);
+  }
 }
+
+
+
