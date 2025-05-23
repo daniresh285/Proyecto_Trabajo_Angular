@@ -45,7 +45,7 @@ export class Pagina1Component implements OnInit {
   // Con el subscribe lo que hacemos una subscripcion a la respuesta asincrona
   // Si da exito se guarda en data todo el contenido de la api
   cargarPokemons() {
-    this.dataService.getRandomPokemons().subscribe(data => {
+    this.dataService.getPokemon().subscribe(data => {
       this.pokemon = data;
       // Guardamos los datos en localStorage para usarlos en Página 2
       localStorage.setItem('pokemons', JSON.stringify(data)); // Lo guardamos como un string 

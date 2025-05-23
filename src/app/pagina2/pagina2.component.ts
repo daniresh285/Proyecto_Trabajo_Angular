@@ -22,23 +22,29 @@ export class Pagina2Component implements OnInit {
   mostrarDetalles = false;   // Booleano para controlar la visualización de detalles de los pokemons
   todos: any[] =[]; // Array que contendrá todos los pokémons
 
+  // Variables para el modal
   modalAbierto: boolean = false; // Controla si el modal está visible
   pokemonSeleccionado: any = null; // Guarda el Pokémon que se ha seleccionado
   paginaInput: number = 1;  // ← Se inicializa con la misma página actual
 
+  // Variables para la paginación
+  paginaActual: number = 1; // Página actual
+  pokemonsPorPagina: number = 10; // Numero de pokemons por pagina
+  totalPokemons: number = 0; // Total de pokémons
+  totalPaginas: number = 0; // Total de páginas
+  siguienteURL: string | null = null; // URL de la siguiente pagina que puede ser tanto string como valor null
+  anteriorURL: string | null = null; // URL de la pagina anterior que puede ser tanto string como valor null
 
-  paginaActual: number = 1;
-  pokemonsPorPagina: number = 10;
-  totalPokemons: number = 0;
-  totalPaginas: number = 0;
-  siguienteURL: string | null = null;
-  anteriorURL: string | null = null;
+  //Variables de busqueda
+  terminoBusqueda: string = ''; // Termino de búsqueda inicializado como cadena vacía
+  pokemonFiltrado: any[] = []; // Array para guardar los pokémons filtrados que es un array vacio
+  buscando: boolean = false; // Para saber si estamos en modo búsqueda o no
 
   // Constructor con inyección de dependencias para rutas y título
   constructor(
     private route: ActivatedRoute,   // Para leer parámetros de la URL
     private titleService: Title,      // Para cambiar el título de la pestaña
-    private dataService: DataService
+    private dataService: DataService // Servicio para obtener datos de Pokémon
   ) {}
 
   // Método que se ejecuta al inicializar el componente
@@ -48,6 +54,8 @@ export class Pagina2Component implements OnInit {
 
     this.titleService.setTitle('Pagina2');  // Cambiamos el título del navegador a "Pagina2"
 
+    // Cargamos los pokémons al iniciar la página
+    this.cargarTodosLosPokemons();
 
     // Intentamos obtener 'origen' desde los parámetros de la URL,
     // si no está, lo cogemos desde localStorage
@@ -70,7 +78,7 @@ export class Pagina2Component implements OnInit {
       this.cargarPokemons((this.paginaActual - 1) * this.pokemonsPorPagina);
     }
   }
-
+  // Esto lo que hace es ir cargando los pokemons de la pagina anterior
   anteriorPagina(): void {
     if (this.paginaActual > 1) {
       this.paginaActual--;
@@ -79,6 +87,7 @@ export class Pagina2Component implements OnInit {
     }
   }
 
+  // Método para ir a una página específica 
   irAPagina(numero: number): void {
   if (numero >= 1 && numero <= this.totalPaginas) {
     this.paginaActual = numero;
@@ -117,5 +126,27 @@ export class Pagina2Component implements OnInit {
     this.modalAbierto = false;   // Oculta el modal de la vista
     document.body.style.overflow= ''; // Vuelve a activar el modal 
   }
+
+  // Método para buscar pokémons por nombre, y filtrar los resultados
+  cargarTodosLosPokemons() {
+    this.dataService.getAllPokemons().subscribe(data => {
+      this.todos = data.results;
+    });
+  }
+
+  buscarPokemon() {
+    const termino = this.terminoBusqueda.trim().toLowerCase();
+
+    if (termino.length === 0) {
+      this.buscando = false;
+      this.pokemonFiltrado = [];
+      this.cargarPokemons((this.paginaActual - 1) * this.pokemonsPorPagina);
+    } else {
+      this.buscando = true;
+      this.pokemonFiltrado = this.todos.filter(p => p.name.toLowerCase().startsWith(termino));
+    }
+  }
+
+
 
 }
