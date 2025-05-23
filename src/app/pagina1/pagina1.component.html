@@ -1,7 +1,41 @@
-<h1>Esta es la página 1</h1>
+<div class="hero">
+  <div class="hero-content">
+    <h1 class="hero-title">Impulsamos la Transformación Digital con Inteligencia Pokémon</h1>
+    <p class="hero-subtitle">
+      En <strong>PokeSolutions S.L.</strong>, integramos análisis avanzado de datos, innovación tecnológica y experiencia empresarial para optimizar tus procesos y potenciar tu crecimiento.
+    </p>
+    <div class="btn-group">
+      <button class="btn-primary" (click)="abrirEnNuevaPestana()" aria-label="Ir a página 2">
+        Ir a Página 2
+      </button>
+    </div>
+  </div>
 
-<p>Vamos a crear el boton para pasar a la página 2</p>
+  <div class="hero-image" (click)="imagenClick()" title="Clic para cargar Pokémon">
+  <img src="assets/img/pikachu.png" alt="Pikachu animado"/>
+  <div class="mensaje-carga" *ngIf="mensajeVisible">
+    ¡Pokémons cargados correctamente!
+  </div>
+</div>
 
-<button (click)="abrirEnNuevaPestana()">Ir a Página 2</button>
-<br><br>
-<button (click)="cargarPokemons()">Cargar Pokemons</button>
+  <!-- SVG decorativos -->
+  <svg class="hero-svg-topright" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <circle cx="32" cy="32" r="30" stroke="url(#grad1)" stroke-width="4" />
+    <defs>
+      <linearGradient id="grad1" x1="0" y1="0" x2="64" y2="64" >
+        <stop offset="0%" stop-color="#FFCB05"/>
+        <stop offset="100%" stop-color="#FF8F05"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <svg class="hero-svg-bottomleft" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <rect x="8" y="8" width="48" height="48" stroke="url(#grad2)" stroke-width="4" rx="10" />
+    <defs>
+      <linearGradient id="grad2" x1="0" y1="64" x2="64" y2="0" >
+        <stop offset="0%" stop-color="#FFCB05"/>
+        <stop offset="100%" stop-color="#FF8F05"/>
+      </linearGradient>
+    </defs>
+  </svg>
+</div>

@@ -10,12 +10,15 @@ import { CommonModule } from '@angular/common'; // Esto es necesario para activa
   selector: 'app-pagina1',
   // Esto es como una plantilla de html para poder poner todo lo que quieras que salga en la página
   templateUrl: "./pagina1.Component.html",
+  styleUrls: ["./pagina1.component.css"],
   imports: [RouterModule, CommonModule] //El common module hay que ponerlo tanto aqui como arriba para que funcione
 })
 export class Pagina1Component implements OnInit {
 
   // La variable donde vamos a guardar los datos que va a ser un array que puede entrar cualquier tipo de dato y se incializará en una array vacía
   pokemon: any[] = [];
+
+  mensajeVisible = false; // Variable para controlar la visibilidad del mensaje
 
   // El constructor se utiliza para inyectar dependencias que tenemos creadas arriba, si pones private estas se guardan como propiedades que puedes utilizar mas adentante
   constructor(
@@ -51,5 +54,30 @@ export class Pagina1Component implements OnInit {
       localStorage.setItem('pokemons', JSON.stringify(data)); // Lo guardamos como un string 
       console.log('Pokémon aleatorios cargados y guardados en localStorage:', data); // Avisamos de que los datos se han guardado correctamente
     });
+  }
+
+  mostrarMensaje() {
+    if (this.mensajeVisible) return; // evitar múltiples clicks seguidos
+
+    this.mensajeVisible = true;
+
+  }
+
+  // Queremos que la imagen también cargue Pokémon, así que delegamos a cargarPokemons()
+  imagenClick() {
+    console.log('imagenClick se ha ejecutado');
+    this.cargarPokemons();
+
+    // Después de 3 segundos ocultamos el mensaje (igual que la animación)
+    setTimeout(() => {
+      this.mensajeVisible = false;
+    }, 3000);
+  }
+
+
+  abrirFormularioContacto() {
+    
+      // Si quieres navegar a otra página:
+      this.router.navigate(['/contacto']);
   }
 }

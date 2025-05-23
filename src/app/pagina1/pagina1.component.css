@@ -1,0 +1,253 @@
+:root {
+  --color-primario: #4e54c8;
+  --color-secundario: #8f94fb;
+  --color-fondo: #121214;
+  --color-blanco: #f9f9f9;
+  --color-acento: #ffcb05;
+  --radio-bordes: 16px;
+  --fuente-principal: 'Poppins', sans-serif;
+  --sombra-glass: rgba(255, 255, 255, 0.2);
+  --sombra-neumorfismo: rgba(0, 0, 0, 0.2);
+}
+
+body {
+  background: var(--color-fondo);
+  color: var(--color-blanco);
+  font-family: var(--fuente-principal);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Hero Section */
+
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 80px 60px;
+  background: linear-gradient(135deg, var(--color-primario), var(--color-secundario));
+  border-radius: var(--radio-bordes);
+  box-shadow: 0 20px 40px rgba(78, 84, 200, 0.6);
+  position: relative;
+  overflow: hidden;
+  min-height: 520px;
+  gap: 60px;
+}
+
+/* Container del texto y botones */
+.hero-content {
+  flex: 1;
+  max-width: 600px;
+  animation: fadeInUp 1s ease forwards;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+/* Animación fadeInUp */
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Título principal */
+.hero-title {
+  font-size: 3.8rem;
+  font-weight: 900;
+  line-height: 1.2;
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+/* Subtítulo */
+.hero-subtitle {
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.6;
+  margin-bottom: 45px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* Botones juntos en fila */
+.btn-group {
+  display: flex;
+  gap: 20px;
+}
+
+/* Botón principal estilo glassmorphism */
+.btn-primary {
+  padding: 18px 52px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  border-radius: var(--radio-bordes);
+  border: none;
+  cursor: pointer;
+  background: rgba(255 255 255 / 0.15);
+  color: var(--color-blanco);
+  box-shadow: 0 8px 32px var(--sombra-glass);
+  backdrop-filter: blur(10px);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+}
+.btn-primary:hover {
+  background: var(--color-acento);
+  color: var(--color-fondo);
+  transform: scale(1.05);
+}
+
+/* Botón secundario neumorfismo */
+.btn-secondary {
+  padding: 18px 52px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  border-radius: var(--radio-bordes);
+  border: none;
+  cursor: pointer;
+  background: var(--color-fondo);
+  color: var(--color-acento);
+  box-shadow: 8px 8px 15px var(--sombra-neumorfismo),
+              -8px -8px 15px #1f2023;
+  transition: box-shadow 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+}
+.btn-secondary:hover {
+  box-shadow: inset 4px 4px 10px var(--sombra-neumorfismo),
+              inset -4px -4px 10px #1f2023;
+  color: var(--color-blanco);
+  transform: scale(1.05);
+}
+
+/* Imagen Pikachu con animación parallax y hover */
+.hero-image {
+  flex: 1;
+  max-width: 400px;
+  position: relative;  /* importante para el mensaje */
+  cursor: pointer;
+  animation: float 6s ease-in-out infinite alternate;
+  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4));
+  border-radius: 50%;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hero-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 50%;
+  user-select: none;
+}
+.hero-image:hover {
+  transform: scale(1.12) rotate(10deg);
+  box-shadow: 0 20px 40px rgba(255, 203, 5, 0.75);
+}
+
+/* Animación flotante */
+@keyframes float {
+  0% { transform: translateY(0) rotate(0deg);}
+  50% { transform: translateY(-20px) rotate(10deg);}
+  100% { transform: translateY(0) rotate(0deg);}
+}
+
+/* SVG decorativos */
+.hero-svg-topright {
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 160px;
+  opacity: 0.18;
+  animation: float 8s ease-in-out infinite alternate;
+  z-index: 0;
+}
+.hero-svg-bottomleft {
+  position: absolute;
+  bottom: -40px;
+  left: -40px;
+  width: 160px;
+  opacity: 0.15;
+  animation: float 10s ease-in-out infinite alternate reverse;
+  z-index: 0;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .hero {
+    flex-direction: column;
+    padding: 60px 30px;
+    min-height: auto;
+  }
+  .hero-content {
+    max-width: 100%;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .hero-title {
+    font-size: 2.8rem;
+  }
+  .hero-subtitle {
+    font-size: 1.2rem;
+  }
+  .btn-group {
+    justify-content: center;
+  }
+  .hero-image {
+    max-width: 250px;
+  }
+  .hero-svg-topright,
+  .hero-svg-bottomleft {
+    display: none;
+  }
+}
+
+/* --- NUEVO: Mensaje emergente al hacer clic en la imagen --- */
+
+.mensaje-carga {
+  position: absolute;
+  bottom: 110%;               /* justo encima de la imagen */
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-acento);
+  color: var(--color-fondo);
+  font-weight: 700;
+  padding: 12px 28px;
+  border-radius: var(--radio-bordes);
+  box-shadow: 0 8px 20px rgba(255, 203, 5, 0.75);
+  opacity: 0;
+  animation: fadeInOut 3s forwards;
+  pointer-events: none;
+  user-select: none;
+  font-size: 1.1rem;
+  white-space: nowrap;
+  z-index: 10;
+  font-family: var(--fuente-principal);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.mensaje-carga.visible {
+  opacity: 1;
+  pointer-events: auto;
+  animation: fadeInOut 3s forwards;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  10%, 90% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+}

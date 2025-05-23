@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common'; // Importamos CommonModule para usar directivas comunes como *ngIf y *ngFor
 import { DataService } from '../services/data.service';
@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true,           
   selector: 'pagina2',  // Selector para usar el componente en HTML como <pagina2>
   styleUrls: ["./pagina2.component.css"],
-  imports: [CommonModule, FormsModule],  // Importamos CommonModule para las directivas en la plantilla
+  imports: [CommonModule, FormsModule, RouterModule],  // Importamos CommonModule para las directivas en la plantilla
   templateUrl: "./pagina2.component.html" // importamos directamente el html donde tenemos todo el contenido
 })
 
