@@ -7,7 +7,11 @@ import { FormsModule } from '@angular/forms';
 
 // Decorador que define el componente Angular
 @Component({
+<<<<<<< HEAD
   standalone: true,
+=======
+  standalone: true,           
+>>>>>>> 2d993bf5f3e9909cdcdc8c01661309178898a9b8
   selector: 'pagina2',  // Selector para usar el componente en HTML como <pagina2>
   styleUrls: ["./pagina2.component.css"],
   imports: [CommonModule, FormsModule, RouterModule],  // Importamos CommonModule para las directivas en la plantilla
@@ -87,7 +91,11 @@ export class Pagina2Component implements OnInit {
     }
   }
 
+<<<<<<< HEAD
   // Método para ir a una página específica
+=======
+  // Método para ir a una página específica 
+>>>>>>> 2d993bf5f3e9909cdcdc8c01661309178898a9b8
   irAPagina(numero: number): void {
   if (numero >= 1 && numero <= this.totalPaginas) {
     this.paginaActual = numero;
@@ -96,7 +104,11 @@ export class Pagina2Component implements OnInit {
     this.cargarPokemons(offset);
   }
 }
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 2d993bf5f3e9909cdcdc8c01661309178898a9b8
   // Método para cargar los datos de pokémon desde localStorage al pulsar el botón
   cargarPokemons(offset: number = 0) {
     const pagina = Math.floor(offset / this.pokemonsPorPagina) + 1;
@@ -124,7 +136,11 @@ export class Pagina2Component implements OnInit {
   cerrarModal() {
     this.pokemonSeleccionado = null;   // Limpia los datos del pokemon
     this.modalAbierto = false;   // Oculta el modal de la vista
+<<<<<<< HEAD
     document.body.style.overflow= ''; // Vuelve a activar el modal
+=======
+    document.body.style.overflow= ''; // Vuelve a activar el modal 
+>>>>>>> 2d993bf5f3e9909cdcdc8c01661309178898a9b8
   }
 
   // Método para buscar pokémons por nombre, y filtrar los resultados

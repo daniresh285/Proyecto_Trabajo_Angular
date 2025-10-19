@@ -10,4 +10,8 @@ export const appRoutes: Routes = [
     { path: 'pagina2', component: Pagina2Component },
     { path: 'contacto', component: ContactoComponent },
     { path: '**', redirectTo: '/pagina1' }
+<<<<<<< HEAD
 ];
+=======
+];
+>>>>>>> 2d993bf5f3e9909cdcdc8c01661309178898a9b8

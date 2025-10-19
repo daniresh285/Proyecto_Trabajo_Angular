@@ -51,7 +51,11 @@ export class Pagina1Component implements OnInit {
     this.dataService.getPokemon().subscribe(data => {
       this.pokemon = data;
       // Guardamos los datos en localStorage para usarlos en Página 2
+<<<<<<< HEAD
       localStorage.setItem('pokemons', JSON.stringify(data)); // Lo guardamos como un string
+=======
+      localStorage.setItem('pokemons', JSON.stringify(data)); // Lo guardamos como un string 
+>>>>>>> 2d993bf5f3e9909cdcdc8c01661309178898a9b8
       console.log('Pokémon aleatorios cargados y guardados en localStorage:', data); // Avisamos de que los datos se han guardado correctamente
     });
   }
@@ -76,8 +80,16 @@ export class Pagina1Component implements OnInit {
 
 
   abrirFormularioContacto() {
+<<<<<<< HEAD
 
       // Si quieres navegar a otra página:
       this.router.navigate(['/contacto']);
   }
 }
+=======
+    
+      // Si quieres navegar a otra página:
+      this.router.navigate(['/contacto']);
+  }
+}
+>>>>>>> 2d993bf5f3e9909cdcdc8c01661309178898a9b8

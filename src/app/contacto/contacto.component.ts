@@ -15,7 +15,11 @@ export class ContactoComponent {
   email = '';
   mensaje = '';
   mensajeEnviado = false;
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 2d993bf5f3e9909cdcdc8c01661309178898a9b8
   constructor(
     private location: Location // Inyectamos Location para poder navegar hacia atrás
   ) {}

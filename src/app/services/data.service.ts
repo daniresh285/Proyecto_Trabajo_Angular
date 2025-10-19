@@ -10,7 +10,11 @@ import { Observable } from 'rxjs';
 export class DataService {
 
   // URL de ejemplo, puedes cambiarla, y aqui meto la URL de la api
+<<<<<<< HEAD
   private apiUrl = 'https://pokeapi.co/api/v2/pokemon?limit=1300';
+=======
+  private apiUrl = 'https://pokeapi.co/api/v2/pokemon?limit=1300'; 
+>>>>>>> 2d993bf5f3e9909cdcdc8c01661309178898a9b8
 
   constructor(private http: HttpClient) { }
 
@@ -33,4 +37,8 @@ export class DataService {
     // La API de PokeAPI limita a 1118 pokemons aproximadamente, puedes pedirlos todos así:
     return this.http.get<any>(`${this.apiUrl}?offset=0&limit=1300`);
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 2d993bf5f3e9909cdcdc8c01661309178898a9b8
