@@ -9,21 +9,16 @@ import { CommonModule } from '@angular/common'; // Esto es necesario para activa
   standalone: true, //Esto es obligatorio dado nuestra version de angular
   selector: 'app-pagina1',
   // Esto es como una plantilla de html para poder poner todo lo que quieras que salga en la página
-  template: `
-    <h1>Esta es la página 1</h1>
-
-    <p>Vamos a crear el boton para pasar a la página 2</p>
-
-    <button (click)="abrirEnNuevaPestana()">Ir a Página 2</button>
-    <br><br>
-    <button (click)="cargarPokemons()">Cargar Pokemons</button>
-  `,
+  templateUrl: "./pagina1.Component.html",
+  styleUrls: ["./pagina1.component.css"],
   imports: [RouterModule, CommonModule] //El common module hay que ponerlo tanto aqui como arriba para que funcione
 })
 export class Pagina1Component implements OnInit {
 
   // La variable donde vamos a guardar los datos que va a ser un array que puede entrar cualquier tipo de dato y se incializará en una array vacía
   pokemon: any[] = [];
+
+  mensajeVisible = false; // Variable para controlar la visibilidad del mensaje
 
   // El constructor se utiliza para inyectar dependencias que tenemos creadas arriba, si pones private estas se guardan como propiedades que puedes utilizar mas adentante
   constructor(
@@ -39,17 +34,12 @@ export class Pagina1Component implements OnInit {
 
     this.route.queryParams.subscribe(params => {
       console.log('QueryParams:', params)});
-
-    // Hacemos llamada a la api que tiene un observable que representa la llamada a la api
-    // Con el subscribe lo que hacemos una subscripcion a la respuesta asincrona
-    // Si da exito se guarda en data todo el contenido de la api y despues extraemos el contenido de data y lo guardamos en la variable pokemon que tenemos en este componente
-
   }
 
   abrirEnNuevaPestana() {
     localStorage.setItem('vengoDe', 'pagina1'); // Guarda el valor de pagina 1 en localStorage del navegador con la clave "VengoDe"
-    this.router.navigate(['/pagina2'], { // Navega a la ruta /pagina2
-      queryParams: { // le añado paramatros de consulta que va a salir en la barra de busqueda
+    this.router.navigate(['/pagina2'], { // Navega a la ruta /pagina2 tal como se pide
+      queryParams: { // le añado paramatros de consulta que va a salir en la siguiente página a la hora de navegar a la pagina 2
         origen: 'pagina1',
         usuario: 'admin' }
     });
@@ -58,11 +48,36 @@ export class Pagina1Component implements OnInit {
   // Con el subscribe lo que hacemos una subscripcion a la respuesta asincrona
   // Si da exito se guarda en data todo el contenido de la api
   cargarPokemons() {
-    this.dataService.getRandomPokemons().subscribe(data => {
+    this.dataService.getPokemon().subscribe(data => {
       this.pokemon = data;
       // Guardamos los datos en localStorage para usarlos en Página 2
-      localStorage.setItem('pokemons', JSON.stringify(data));
-      console.log('Pokémon aleatorios cargados y guardados en localStorage:', data);
+      localStorage.setItem('pokemons', JSON.stringify(data)); // Lo guardamos como un string
+      console.log('Pokémon aleatorios cargados y guardados en localStorage:', data); // Avisamos de que los datos se han guardado correctamente
     });
+  }
+
+  mostrarMensaje() {
+    if (this.mensajeVisible) return; // evitar múltiples clicks seguidos
+
+    this.mensajeVisible = true;
+
+  }
+
+  // Queremos que la imagen también cargue Pokémon, así que delegamos a cargarPokemons()
+  imagenClick() {
+    console.log('imagenClick se ha ejecutado');
+    this.cargarPokemons();
+
+    // Después de 3 segundos ocultamos el mensaje (igual que la animación)
+    setTimeout(() => {
+      this.mensajeVisible = false;
+    }, 3000);
+  }
+
+
+  abrirFormularioContacto() {
+
+      // Si quieres navegar a otra página:
+      this.router.navigate(['/contacto']);
   }
 }

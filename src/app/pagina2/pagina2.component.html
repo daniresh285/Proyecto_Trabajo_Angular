@@ -1,2 +1,116 @@
-<h1>Esta es la pagina 2</h1>
 
+<!-- Menú de navegación -->
+<nav>
+  <ul class="menu">
+    <li><a routerLink="/pagina1">Inicio</a></li>
+    <li><a href="/pagina1">Volver a Pagina 1</a></li>
+    <li class="submenu">
+      <a routerLink="/Informacion">Información</a>
+      <ul class="submenu-content">
+        <li><strong>Origen:</strong> {{ origen || 'Desconocido' }}</li>
+        <li><strong>Usuario:</strong> {{ usuario || 'Invitado' }}</li>
+      </ul>
+    </li>
+    <li><a routerLink="/contacto">Contacto</a></li>
+    <li><button (click)="cargarPokemons()">Mostrar Pokemons</button></li>
+  </ul>
+</nav>
+
+
+<!-- Contenedor que se muestra solo si mostrarDetalles es true y hay pokemons en la lista -->
+<div *ngIf="mostrarDetalles" class="lista-etiquetas">
+  <!--Para la busqueda filtrada de los pokemons-->
+  <div class="busqueda-container">
+    <input
+      type="text"
+      placeholder="Buscar Pokémon por nombre..."
+      [(ngModel)]="terminoBusqueda"
+      (keydown.enter)="buscarPokemon()"
+      (input)="buscarPokemon()"
+    />
+  </div>
+  <h2>Aquí están los 10 Pokémon. Selecciona uno si quieres ver sus detalles:</h2>
+  <div class="paginacion" *ngIf="mostrarDetalles">
+      <button (click)="anteriorPagina()" [disabled]="paginaActual === 1">Anterior</button>
+      <span>Página <input
+        type="number"
+        [(ngModel)]="paginaInput"
+        (keydown.enter)="irAPagina(paginaInput)"
+        [min]="1"
+        [max]="totalPaginas"
+        style="width: 60px; text-align: center;"
+        />
+        de {{totalPaginas}}
+      </span>
+      <button (click)="siguientePagina()" [disabled]="paginaActual >= totalPaginas">Siguiente</button>
+  </div>
+
+
+  <div *ngFor="let p of (buscando ? pokemonFiltrado : pokemon)" class="etiqueta-pokemon">
+      <span class="nombre">{{ p.name }}</span>
+
+      <div class="iconos">
+          <!-- Icono para ver detalles -->
+          <button class="icono" (click)="abrirModal(p)" title="Ver detalles">
+              🔍
+          </button>
+
+          <!-- Icono decorativo o para eliminar si deseas -->
+          <button class="icono" title="Eliminar (no implementado)">
+              ❌
+          </button>
+      </div>
+  </div>
+</div>
+
+<!-- Esto dice que si modalAbierto es = true, el div se deja ver -->
+<div class="modal" *ngIf="modalAbierto">
+
+  <!-- El contenido de este se muestra solo si hay algun pokemon seleccionado -->
+  <div class="modal-contenido" *ngIf="pokemonSeleccionado">
+    <button class="cerrar" (click)="cerrarModal()">×</button>
+
+    <!-- Nombre del pokemon, con el primer carácter en mayúscula gracias al titlecase -->
+    <h2>{{ pokemonSeleccionado.name | titlecase }}</h2>
+
+    <!-- Imagen visual del pokemon -->
+    <img [src]="pokemonSeleccionado.sprites.front_default" alt="Imagen Pokémon">
+
+    <!-- Información básica del pokémon -->
+    <p><strong>ID:</strong> {{ pokemonSeleccionado.id }}</p>
+    <p><strong>Altura:</strong> {{ pokemonSeleccionado.height }} cm</p>
+    <p><strong>Peso:</strong> {{ pokemonSeleccionado.weight }} kg</p>
+
+    <!-- De que tipo es el pokemon seleccionado que para el bucle lo que hace es recorrer la lista types -->
+    <p><strong>Tipos:</strong></p>
+    <ul>
+      <li *ngFor="let tipo of pokemonSeleccionado.types">
+        {{ tipo.type.name }}
+      </li>
+    </ul>
+
+    <!-- Habilidades del pokémon, itera sobre la lista abilities -->
+    <p><strong>Habilidades:</strong></p>
+    <ul>
+      <li *ngFor="let habilidad of pokemonSeleccionado.abilities">
+        {{ habilidad.ability.name }}
+      </li>
+    </ul>
+
+    <!-- Estadísticas del pokemon se recorre la lista stats -->
+    <p><strong>Estadísticas:</strong></p>
+    <ul>
+      <li *ngFor="let stat of pokemonSeleccionado.stats">
+        {{ stat.stat.name }}: {{ stat.base_stat }}
+      </li>
+    </ul>
+
+    <!-- Primeros 5 movimientos del pokémon, se recorre mediante un slice la lista de moves -->
+    <p><strong>Movimientos (primeros 5):</strong></p>
+    <ul>
+      <li *ngFor="let move of pokemonSeleccionado.moves.slice(0, 5)">
+        {{ move.move.name }}
+      </li>
+    </ul>
+  </div>
+</div>
